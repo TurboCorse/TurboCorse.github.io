@@ -54,14 +54,14 @@
     .pulse{
       display:inline-block;
       margin-right:10px;
-      height:12px;width:12px;border-radius:50%;background:var(--accent);
+      height:8px;width:8px;border-radius:50%;background:var(--accent);
       box-shadow:0 0 0 var(--pulse-size,0px) rgba(34,193,195,0.25);
       animation:pulse 1.6s infinite ease-in-out;
       vertical-align:middle;
     }
     @keyframes pulse{
       0%{transform:scale(0.9);--pulse-size:0px}
-      70%{transform:scale(1);--pulse-size:18px}
+      70%{transform:scale(1);--pulse-size:12px}
       100%{transform:scale(0.9);--pulse-size:0px}
     }
     footer{margin-top:20px;font-size:13px;color:var(--muted)}
