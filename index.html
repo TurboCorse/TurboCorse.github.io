@@ -86,7 +86,7 @@ button { padding: 10px 14px; font-size: 1.1em; }
 
 <script>
 let chart;
-
+	
 // Farben
 const gearColors = ["rgb(220,53,69)","rgb(255,159,64)","rgb(40,167,69)","rgb(0,123,255)","rgb(111,66,193)","rgb(33,37,41)"];
 
@@ -223,7 +223,7 @@ function drawDiagram(){
     const steps=200;
     for(let i=0;i<=steps;i++){
       const n=i*nMax/steps;
-      const v=factor*n/(gears[0]*axle);
+      const v=factor*n/(gears[4]*axle);
       torqueData.push({x:v, y:realTorqueCurve(n)});
     }
     datasets.push({label:"Engine Torque [Nm]", data:torqueData, borderColor:"rgb(255,0,0)", borderWidth:2, fill:false, yAxisID:"yTorque"});
