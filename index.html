@@ -1,111 +1,258 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TurboCorse — 2WD Dyno Revolt Hub Dyno</title>
-  <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#22c1c3;--muted:#9aa6b2}
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans",sans-serif;
-      background: url("back.jpeg") no-repeat center center fixed;
-      <!--background:linear-gradient(180deg,var(--bg) 0%, #071028 100%); -->
-      background-size: cover;
-      color: #e6eef6;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
-    .card{
-      background: rgba(15, 23, 36, 0.90); /* dunkler solider Hintergrund */
-      border:1px solid rgba(255,255,255,0.1);
-      padding:48px 36px;
-      border-radius:16px;
-      text-align:center;
-      width:100%;
-      max-width:720px;
-      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
-    }
-@media (max-width: 480px) {
-    .card{
-      background: rgba(15, 23, 36, 0.90); /* dunkler solider Hintergrund */
-      border:1px solid rgba(255,255,255,0.1);
-      padding:24px 16px;
-      border-radius:16px;
-      text-align:center;
-      width:100%;
-      max-width:90%;
-      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
-    }
+<meta charset="UTF-8">
+<title>Getriebe-Geschwindigkeitsdiagramm (mobil-optimiert)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { font-family: Arial, sans-serif; margin: 10px; padding: 0; }
+h2 { font-size: 1.5em; }
+.input-group { display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+.input-group label { flex: 0 0 140px; margin-right: 8px; min-width: 120px; font-size: 1em; }
+.input-group input, .input-group select, .input-group button, .input-group span { 
+  flex: 1 1 auto; max-width: 100%; margin: 4px 0; font-size: 1.1em; padding: 6px; 
 }
-    h1{font-size:clamp(28px,4.5vw,48px);margin:0 0 12px;letter-spacing:0.02em}
-    p.lead{font-size:18px;margin:0 0 18px;color:var(--muted)}
-   .product{display:inline-block;background:linear-gradient(90deg, rgba(34,193,195,0.12), rgba(34,193,195,0.06));padding:10px 
-    16px;border-radius:999px;border:1px solid rgba(34,193,195,0.12);font-weight:500;color:var(--accent)}
-@media (max-width: 480px) {
-   h1{font-size:clamp(24px,4.5vw,48px);margin:0 0 12px;letter-spacing:0.02em}
-   p.lead{font-size:14px;margin:0 0 18px;color:var(--muted)}
-
- }   
-    .pulse{
-      display:inline-block;
-      margin-right:10px;
-      height:8px;width:8px;border-radius:50%;background:var(--accent);
-      box-shadow:0 0 0 var(--pulse-size,0px) rgba(34,193,195,0.25);
-      animation:pulse 1.6s infinite ease-in-out;
-      vertical-align:middle;
-    }
-    @keyframes pulse{
-      0%{transform:scale(0.9);--pulse-size:0px}
-      70%{transform:scale(1);--pulse-size:12px}
-      100%{transform:scale(0.9);--pulse-size:0px}
-    }
-    footer{margin-top:20px;font-size:13px;color:var(--muted)}
-    @media (prefers-reduced-motion:reduce){.pulse{animation:none}}
-    .logo {
-       background: #ffffff;       /* weißer Hintergrund */
-       /*display: flex;*/
-       justify-content: center;  /* horizontal zentriert */
-       align-items: center;       /* falls nötig auch vertikal */
-       padding: 20px;             /* Abstand zum Bild */
-       width: 50%;      /* Größe anpassen */
-       margin-bottom: 20px;
-    }
-@media (max-width: 480px) {
-    .logo {
-       background: #ffffff;       /* weißer Hintergrund */
-       /*display: flex;*/
-       justify-content: center;  /* horizontal zentriert */
-       align-items: center;       /* falls nötig auch vertikal */
-       padding: 20px;             /* Abstand zum Bild */
-       width: 40%;      /* Größe anpassen */
-       margin-bottom: 20px;
-    }
+select { white-space: nowrap; overflow-x: auto; }
+canvas { width: 100% !important; height: auto !important; max-width: 1000px; margin-top: 10px; }
+button { padding: 10px 14px; font-size: 1.1em; }
+.checkbox-group { display: flex; align-items: center; margin-bottom: 12px; font-size: 1.1em; }
+.checkbox-group input { margin-right: 6px; }
+@media (max-width: 600px){
+  .input-group { flex-direction: column; align-items: flex-start; }
+  .input-group label { margin-bottom: 4px; }
+  button { width: 100%; }
 }
-  </style>
+</style>
 </head>
 <body>
-  <main class="card" role="main">
-    <img src="logo.png" alt="Logo" class="logo">
-    <div style="display:flex;align-items:center;justify-content:center;margin-bottom:14px;">       
-      <span class="pulse" aria-hidden="true"></span>
-      <div style="text-align:left">               
-        <h1>Coming soon....</h1>
-        <p class="lead">2WD Dyno Revolt hub dyno @ TurboCorse Electronics</p>
-      </div>
+
+<h2>Getriebe-Geschwindigkeitsdiagramm (mobil-optimiert)</h2>
+
+<div class="input-group">
+  <label>Getriebe wählen:</label>
+  <select id="gearboxSelect" onchange="selectGearbox()"></select>
+</div>
+
+<div class="input-group">
+  <label>Max. Drehzahl [1/min]:</label>
+  <input id="nmax" type="number" value="8000" onchange="drawDiagram()">
+</div>
+
+<div class="input-group">
+  <label>Schaltdrehzahl:</label>
+  <input type="range" id="nshift" min="3000" max="8000" step="100"
+         value="8000" oninput="updateShiftLabel(); drawDiagram();">
+  <span id="shiftLabel">8000 1/min</span>
+</div>
+
+<div class="input-group">
+  <label>Raddurchmesser [mm]:</label>
+  <input id="diameter" type="number" value="610" onchange="drawDiagram()">
+</div>
+
+<div class="input-group">
+  <label>Achsübersetzung:</label>
+  <input id="axle" type="number" step="0.001" value="3.8" onchange="drawDiagram()">
+</div>
+
+<div class="input-group">
+  <label>Gangübersetzungen:</label>
+  <div style="display:flex; gap:4px; flex-wrap:wrap; width:100%;">
+    <!-- Zeile 1: Gang 1–3 -->
+    <div style="flex:1; display:flex; gap:4px;">
+      <input class="gear" type="number" step="0.001" value="3.3" onchange="drawDiagram()">
+      <input class="gear" type="number" step="0.001" value="2.0" onchange="drawDiagram()">
+      <input class="gear" type="number" step="0.001" value="1.37" onchange="drawDiagram()">
     </div>
-    <div class="product" aria-hidden="true">First Dyno Revolt Hub Dyno in Austria</div>
-    <footer>
-      Get in touch: <a href="mailto:info@turbocorse.at">info@turbocorse.at</a><br>
-      &copy; <span id="year"></span> — Built with ❤️
-    </footer>
-  </main>
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+    <!-- Zeile 2: Gang 4–6 -->
+    <div style="flex:1; display:flex; gap:4px; margin-top:4px;">
+      <input class="gear" type="number" step="0.001" value="1.04" onchange="drawDiagram()">
+      <input class="gear" type="number" step="0.001" value="0.83" onchange="drawDiagram()">
+      <input class="gear" type="number" step="0.001" value="0.0" onchange="drawDiagram()">
+    </div>
+  </div>
+</div>
+
+<div class="checkbox-group">
+  <input type="checkbox" id="showTorque" checked onchange="drawDiagram()">
+  <label for="showTorque">Engine Torque Kurve anzeigen</label>
+</div>
+
+<div class="input-group">
+  <button onclick="drawDiagram()">Diagramm aktualisieren</button>
+</div>
+
+<canvas id="chart"></canvas>
+
+<script>
+let chart;
+
+// Farben
+const gearColors = ["rgb(220,53,69)","rgb(255,159,64)","rgb(40,167,69)","rgb(0,123,255)","rgb(111,66,193)","rgb(33,37,41)"];
+
+// Getriebe-Datenbank
+const gearboxes = [
+{ name:"Alfetta GT 1600", axle:4.3, gears:[3.3,2.0,1.37,1.04,0.83,0.0] },
+{ name:"Alfetta GTV 2000", axle:4.1, gears:[3.3,1.96,1.35,1.03,0.83,0.0] },
+{ name:"Alfetta Sedan 2L", axle:4.1, gears:[3.3,2.0,1.37,1.04,0.83,0.0] },
+{ name:"Alfetta QO", axle:3.8, gears:[3.0,1.956,1.26,0.946,0.78,0.0] },
+{ name:"GTV6", axle:4.1, gears:[3.5,1.956,1.345,1.026,0.78,0.0] },
+{ name:"GTV6 II", axle:4.1, gears:[3.5,1.96,1.26,0.95,0.78,0.0] },
+{ name:"90 2.5", axle:3.545, gears:[3.5,1.946,1.258,0.946,0.78,0.0] },
+{ name:"75 1.6", axle:4.56, gears:[2.88,1.72,1.23,0.95,0.78,0.0] },
+{ name:"75 1.8", axle:4.3, gears:[2.88,1.72,1.23,0.95,0.78,0.0] },
+{ name:"75 1.8 IE", axle:4.3, gears:[2.0,1.88,1.72,1.23,0.95,0.0] },
+{ name:"75 TS/Turbo", axle:4.1, gears:[2.875,1.72,1.226,0.946,0.78,0.0] },
+{ name:"75 3.0", axle:3.545, gears:[2.875,1.72,1.226,0.946,0.78,0.0] },
+{ name:"75 3.0 QV", axle:3.727, gears:[2.875,1.72,1.226,0.946,0.78,0.0] },
+{ name:"75 2.0TD", axle:3.55, gears:[3.5,1.96,1.26,0.95,0.78,0.0] },
+{ name:"75 2.4TD", axle:3.08, gears:[3.5,1.96,1.26,0.95,0.78,0.0] },
+{ name:"Sadev 1 (147 Weiß)", axle:3.8, gears:[2.833,2.118,1.684,1.400,1.200,1.045] },
+{ name:"Sadev 2 (147 Rot)", axle:4.154, gears:[2.833,2.118,1.684,1.364,1.200,1.045] }
+];
+
+// Dropdown füllen
+const select = document.getElementById("gearboxSelect");
+gearboxes.forEach((gb, idx)=>{
+  const opt = document.createElement("option");
+  opt.value = idx;
+  opt.text = gb.name;
+  select.add(opt);
+});
+select.value = 0;
+
+// Auswahl laden
+function selectGearbox(){
+  const gb = gearboxes[Number(select.value)];
+  document.getElementById("axle").value = gb.axle;
+  const gearInputs = document.getElementsByClassName("gear");
+  gb.gears.forEach((g,i)=> gearInputs[i].value = g);
+  drawDiagram();
+}
+
+// Slider Label
+function updateShiftLabel(){
+  document.getElementById("shiftLabel").innerText = document.getElementById("nshift").value + " 1/min";
+}
+
+// Reale Motordrehmomentkurve
+const realTorqueData = [
+  {n:1000, torque:100},
+  {n:2000, torque:130},
+  {n:3000, torque:160},
+  {n:4000, torque:190},
+  {n:5000, torque:210},
+  {n:6000, torque:200},
+  {n:7000, torque:180},
+  {n:8000, torque:150}
+];
+function realTorqueCurve(n){
+  if(n<=realTorqueData[0].n) return realTorqueData[0].torque;
+  for(let i=0;i<realTorqueData.length-1;i++){
+    const p1=realTorqueData[i], p2=realTorqueData[i+1];
+    if(n>=p1.n && n<=p2.n){
+      return p1.torque + (p2.torque-p1.torque)*(n-p1.n)/(p2.n-p1.n);
+    }
+  }
+  return realTorqueData[realTorqueData.length-1].torque;
+}
+
+// ΔDrehzahl Plugin
+const shiftDeltaPlugin = {
+  id:'shiftDeltaPlugin',
+  afterDatasetsDraw(chart){
+    const ctx = chart.ctx;
+    chart.data.datasets.forEach(dataset=>{
+      if(dataset.label==="Schaltsprung"){
+        const xPixel = chart.scales.x.getPixelForValue(dataset.data[0].x);
+        const yPixel1 = chart.scales.y.getPixelForValue(dataset.data[0].y);
+        const yPixel2 = chart.scales.y.getPixelForValue(dataset.data[1].y);
+        const yPixel = (yPixel1 + yPixel2)/2;
+        ctx.save();
+        ctx.fillStyle = "rgb(50,50,50)";
+        ctx.font = "bold 12px Arial";
+        ctx.textAlign = "left";
+        ctx.fillText(`Δn = ${Math.round(dataset.data[1].y-dataset.data[0].y)} 1/min`, xPixel+5, yPixel-5);
+        ctx.restore();
+      }
+    });
+  }
+};
+
+// Diagramm zeichnen
+function drawDiagram(){
+  const nMax = Number(document.getElementById("nmax").value);
+  const nShift = Number(document.getElementById("nshift").value);
+  const diameter = Number(document.getElementById("diameter").value)/1000;
+  const axle = Number(document.getElementById("axle").value);
+  const gears = Array.from(document.getElementsByClassName("gear")).map(e=>Number(e.value));
+  const factor = (2*Math.PI*(diameter/2)/60)*3.6;
+
+  let allSpeeds = gears.filter(g=>g>0).map(g=>factor*nMax/(g*axle));
+  const maxSpeed = Math.max(...allSpeeds)*1.1;
+
+  const datasets=[];
+
+  // Ganglinien
+  gears.forEach((g,i)=>{
+    if(!g) return;
+    const data=[];
+    for(let n=0;n<=nMax;n+=100){
+      data.push({x:factor*n/(g*axle), y:n});
+    }
+    datasets.push({label:`${i+1}. Gang`, data, borderColor:gearColors[i], borderWidth:2, fill:false, pointRadius:0});
+  });
+
+  // Schaltsprünge
+  for(let i=0;i<gears.length-1;i++){
+    const g1=gears[i], g2=gears[i+1];
+    if(!g1 || !g2) continue;
+    const vShift=factor*nShift/(g1*axle);
+    const nAfter=nShift*(g2/g1);
+    datasets.push({
+      label:"Schaltsprung",
+      data:[{x:vShift,y:nShift},{x:vShift,y:nAfter}],
+      borderColor:"rgb(150,150,150)", borderDash:[6,6], borderWidth:2, fill:false, pointRadius:0
+    });
+  }
+
+  // Engine Torque Kurve ein/aus
+  if(document.getElementById("showTorque").checked){
+    const torqueData=[];
+    const steps=200;
+    for(let i=0;i<=steps;i++){
+      const n=i*nMax/steps;
+      const v=factor*n/(gears[0]*axle);
+      torqueData.push({x:v, y:realTorqueCurve(n)});
+    }
+    datasets.push({label:"Engine Torque [Nm]", data:torqueData, borderColor:"rgb(255,0,0)", borderWidth:2, fill:false, yAxisID:"yTorque"});
+  }
+
+  if(chart) chart.destroy();
+  chart = new Chart(document.getElementById("chart"),{
+    type:"line",
+    data:{datasets},
+    plugins:[shiftDeltaPlugin],
+    options:{
+      interaction:{mode:"nearest", intersect:false},
+      plugins:{
+        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.x.toFixed(1)} km/h bei ${Math.round(ctx.parsed.y)} ${ctx.dataset.yAxisID==="yTorque"?"Nm":"1/min"}`}},
+        legend:{display:true}
+      },
+      scales:{
+        x:{type:"linear", title:{display:true,text:"Geschwindigkeit [km/h]"}, min:0, max:maxSpeed},
+        y:{title:{display:true,text:"Motordrehzahl [1/min]"}, max:nMax*1.05},
+        yTorque:{position:"right", title:{display:true,text:"Engine Torque [Nm]"}, min:0}
+      }
+    }
+  });
+}
+
+// Initial laden
+selectGearbox();
+updateShiftLabel();
+drawDiagram();
+</script>
+
 </body>
 </html>
